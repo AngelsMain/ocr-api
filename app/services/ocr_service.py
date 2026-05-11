@@ -4,11 +4,19 @@ from PIL import Image, ImageEnhance
 import io
 import time
 import re
+import os
+import shutil
 from app.config import settings
 
 class OCRService:
     def __init__(self):
-        pytesseract.pytesseract.pytesseract_cmd = settings.TESSERACT_PATH
+        tesseract_path = settings.TESSERACT_PATH
+        if tesseract_path and os.path.isfile(tesseract_path):
+            pytesseract.pytesseract.tesseract_cmd = tesseract_path
+        else:
+            detected_path = shutil.which("tesseract")
+            if detected_path:
+                pytesseract.pytesseract.tesseract_cmd = detected_path
 
     @staticmethod
     def preprocess_image(image: Image.Image) -> Image.Image:
