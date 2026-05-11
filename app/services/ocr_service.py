@@ -108,8 +108,8 @@ class OCRService:
             # Pre-procesar imagen
             image = self.preprocess_image(image)
 
-            # Configuración mejorada de Tesseract para español
-            config = '--psm 1 --oem 3'  # PSM 1 = detectar orientación, OEM 3 = mejor OCR
+            # Modo rapido de Tesseract para menor latencia
+            config = '--psm 6 --oem 1'
             text = pytesseract.image_to_string(image, lang='spa+eng', config=config)
 
             # Post-procesar para corregir acentos
@@ -124,10 +124,10 @@ class OCRService:
     def extract_text_from_pdf(self, pdf_bytes: bytes) -> tuple[str, float, float]:
         try:
             start_time = time.time()
-            images = convert_from_bytes(pdf_bytes, dpi=300)  # Aumentar DPI para mejor calidad
+            images = convert_from_bytes(pdf_bytes, dpi=200)
             all_text = []
 
-            config = '--psm 1 --oem 3'
+            config = '--psm 6 --oem 1'
 
             for image in images:
                 # Pre-procesar imagen
